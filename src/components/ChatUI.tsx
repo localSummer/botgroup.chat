@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from "@/components/ui/tooltip";
 
 import {
@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import {generateAICharacters} from "@/config/aiCharacters";
+import { generateAICharacters } from "@/config/aiCharacters";
 import { groups } from "@/config/groups";
 import type { AICharacter } from "@/config/aiCharacters";
 import ReactMarkdown from 'react-markdown';
@@ -31,7 +31,7 @@ import { SharePoster } from '@/components/SharePoster';
 // 使用本地头像数据，避免外部依赖
 const getAvatarData = (name: string) => {
   const colors = ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22'];
-  const index = (name.charCodeAt(0) + (name.charCodeAt(1) || 0 )) % colors.length;
+  const index = (name.charCodeAt(0) + (name.charCodeAt(1) || 0)) % colors.length;
   return {
     backgroundColor: colors[index],
     text: name[0],
@@ -50,7 +50,7 @@ const SingleAvatar = ({ user }: { user: User | AICharacter }) => {
   }
   const avatarData = getAvatarData(user.name);
   return (
-    <div 
+    <div
       className="w-full h-full flex items-center justify-center text-xs text-white font-medium"
       style={{ backgroundColor: avatarData.backgroundColor }}
     >
@@ -63,9 +63,9 @@ const SingleAvatar = ({ user }: { user: User | AICharacter }) => {
 const HalfAvatar = ({ user, isFirst }: { user: User, isFirst: boolean }) => {
   if ('avatar' in user && user.avatar) {
     return (
-      <div 
+      <div
         className="w-1/2 h-full"
-        style={{ 
+        style={{
           borderRight: isFirst ? '1px solid white' : 'none'
         }}
       >
@@ -75,9 +75,9 @@ const HalfAvatar = ({ user, isFirst }: { user: User, isFirst: boolean }) => {
   }
   const avatarData = getAvatarData(user.name);
   return (
-    <div 
+    <div
       className="w-1/2 h-full flex items-center justify-center text-xs text-white font-medium"
-      style={{ 
+      style={{
         backgroundColor: avatarData.backgroundColor,
         borderRight: isFirst ? '1px solid white' : 'none'
       }}
@@ -91,9 +91,9 @@ const HalfAvatar = ({ user, isFirst }: { user: User, isFirst: boolean }) => {
 const QuarterAvatar = ({ user, index }: { user: User, index: number }) => {
   if ('avatar' in user && user.avatar) {
     return (
-      <div 
+      <div
         className="aspect-square"
-        style={{ 
+        style={{
           borderRight: index % 2 === 0 ? '1px solid white' : 'none',
           borderBottom: index < 2 ? '1px solid white' : 'none'
         }}
@@ -104,9 +104,9 @@ const QuarterAvatar = ({ user, index }: { user: User, index: number }) => {
   }
   const avatarData = getAvatarData(user.name);
   return (
-    <div 
+    <div
       className="aspect-square flex items-center justify-center text-[8px] text-white font-medium"
-      style={{ 
+      style={{
         backgroundColor: avatarData.backgroundColor,
         borderRight: index % 2 === 0 ? '1px solid white' : 'none',
         borderBottom: index < 2 ? '1px solid white' : 'none'
@@ -183,8 +183,8 @@ const ChatUI = () => {
 
   // 添加禁言/取消禁言处理函数
   const handleToggleMute = (userId: string) => {
-    setMutedUsers(prev => 
-      prev.includes(userId) 
+    setMutedUsers(prev =>
+      prev.includes(userId)
         ? prev.filter(id => id !== userId)
         : [...prev, userId]
     );
@@ -211,7 +211,7 @@ const ChatUI = () => {
     // 构建历史消息数组
     let messageHistory = messages.map(msg => ({
       role: 'user',
-      content: msg.sender.name == "我" ? 'user：' + msg.content :  msg.sender.name + '：' + msg.content,
+      content: msg.sender.name == "我" ? 'user：' + msg.content : msg.sender.name + '：' + msg.content,
       name: msg.sender.name
     }));
 
@@ -227,7 +227,7 @@ const ChatUI = () => {
         content: "",
         isAI: true
       };
-      
+
       // 添加当前 AI 的消息
       setMessages(prev => [...prev, aiMessage]);
 
@@ -264,32 +264,33 @@ const ChatUI = () => {
 
         while (true) {
           const { done, value } = await reader.read();
-          
+
           if (done) {
             //如果completeResponse为空，
             if (completeResponse.trim() === "") {
-            completeResponse = "这个问题难倒我了，下一位。";
-            setMessages(prev => {
-              const newMessages = [...prev];
-              const aiMessageIndex = newMessages.findIndex(msg => msg.id === aiMessage.id);
-              if (aiMessageIndex !== -1) {
-                newMessages[aiMessageIndex] = {
-                  ...newMessages[aiMessageIndex],
-                  content: completeResponse
-                };
-              }
-              return newMessages;
-            });}
+              completeResponse = "这个问题难倒我了，下一位。";
+              setMessages(prev => {
+                const newMessages = [...prev];
+                const aiMessageIndex = newMessages.findIndex(msg => msg.id === aiMessage.id);
+                if (aiMessageIndex !== -1) {
+                  newMessages[aiMessageIndex] = {
+                    ...newMessages[aiMessageIndex],
+                    content: completeResponse
+                  };
+                }
+                return newMessages;
+              });
+            }
             break;
           }
-          
+
           buffer += decoder.decode(value, { stream: true });
-          
+
           let newlineIndex;
           while ((newlineIndex = buffer.indexOf('\n')) >= 0) {
             const line = buffer.slice(0, newlineIndex);
             buffer = buffer.slice(newlineIndex + 1);
-            
+
             if (line.startsWith('data: ')) {
               try {
                 const data = JSON.parse(line.slice(6));
@@ -306,7 +307,7 @@ const ChatUI = () => {
                     }
                     return newMessages;
                   });
-                } 
+                }
 
               } catch (e) {
                 console.error('解析响应数据失败:', e);
@@ -329,14 +330,14 @@ const ChatUI = () => {
 
       } catch (error) {
         console.error("发送消息失败:", error);
-        setMessages(prev => prev.map(msg => 
-          msg.id === aiMessage.id 
+        setMessages(prev => prev.map(msg =>
+          msg.id === aiMessage.id
             ? { ...msg, content: "错误: " + error.message, isError: true }
             : msg
         ));
       }
     }
-    
+
     setIsLoading(false);
   };
 
@@ -408,7 +409,7 @@ const ChatUI = () => {
                 <p className="text-xs text-gray-500">{users.length} 名成员</p>
               </div>
             </div>
-            
+
             {/* 右侧头像组和按钮 */}
             <div className="flex items-center">
               <div className="flex -space-x-2 ">
@@ -453,30 +454,28 @@ const ChatUI = () => {
           <ScrollArea className="h-full p-2" ref={chatAreaRef}>
             <div className="space-y-4">
               {messages.map((message) => (
-                <div key={message.id} 
+                <div key={message.id}
                   className={`flex items-start gap-2 ${message.sender.name === "我" ? "justify-end" : ""}`}>
                   {message.sender.name !== "我" && (
                     <Avatar>
                       {'avatar' in message.sender && message.sender.avatar ? (
                         <AvatarImage src={message.sender.avatar} className="w-10 h-10" />
                       ) : (
-                      <AvatarFallback style={{ backgroundColor: getAvatarData(message.sender.name).backgroundColor, color: 'white' }}>
-                        {message.sender.name[0]}
-                      </AvatarFallback>
+                        <AvatarFallback style={{ backgroundColor: getAvatarData(message.sender.name).backgroundColor, color: 'white' }}>
+                          {message.sender.name[0]}
+                        </AvatarFallback>
                       )}
                     </Avatar>
                   )}
                   <div className={message.sender.name === "我" ? "text-right" : ""}>
                     <div className="text-sm text-gray-500">{message.sender.name}</div>
-                    <div className={`mt-1 p-3 rounded-lg shadow-sm chat-message ${
-                      message.sender.name === "我" ? "bg-blue-500 text-white text-left" : "bg-white"
-                    }`}>
-                      <ReactMarkdown 
+                    <div className={`mt-1 p-3 rounded-lg shadow-sm chat-message ${message.sender.name === "我" ? "bg-blue-500 text-white text-left" : "bg-white"
+                      }`}>
+                      <ReactMarkdown
                         remarkPlugins={[remarkGfm, remarkMath]}
                         rehypePlugins={[rehypeKatex]}
-                        className={`prose dark:prose-invert max-w-none ${
-                          message.sender.name === "我" ? "text-white [&_*]:text-white" : ""
-                        }
+                        className={`prose dark:prose-invert max-w-none ${message.sender.name === "我" ? "text-white [&_*]:text-white" : ""
+                          }
                         [&_h2]:py-1
                         [&_h2]:m-0
                         [&_h3]:py-1.5
@@ -515,12 +514,12 @@ const ChatUI = () => {
                   </div>
                   {message.sender.name === "我" && (
                     <Avatar>
-                     {'avatar' in message.sender && message.sender.avatar ? (
+                      {'avatar' in message.sender && message.sender.avatar ? (
                         <AvatarImage src={message.sender.avatar} className="w-10 h-10" />
                       ) : (
-                      <AvatarFallback style={{ backgroundColor: getAvatarData(message.sender.name).backgroundColor, color: 'white' }}>
-                        {message.sender.name[0]}
-                      </AvatarFallback>
+                        <AvatarFallback style={{ backgroundColor: getAvatarData(message.sender.name).backgroundColor, color: 'white' }}>
+                          {message.sender.name[0]}
+                        </AvatarFallback>
                       )}
                     </Avatar>
                   )}
@@ -543,7 +542,7 @@ const ChatUI = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button 
+                    <Button
                       variant="outline"
                       size="icon"
                       onClick={handleShareChat}
@@ -558,14 +557,14 @@ const ChatUI = () => {
                 </Tooltip>
               </TooltipProvider>
             )}
-            <Input 
-              placeholder="输入消息..." 
+            <Input
+              placeholder="输入消息..."
               className="flex-1"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             />
-            <Button 
+            <Button
               onClick={handleSendMessage}
               disabled={isLoading}
             >
@@ -599,7 +598,7 @@ const ChatUI = () => {
                       <div className="flex items-center gap-3">
                         <Avatar>
                           {'avatar' in user && user.avatar ? (
-                            <AvatarImage src={user.avatar} className="w-10 h-10" /> 
+                            <AvatarImage src={user.avatar} className="w-10 h-10" />
                           ) : (
                             <AvatarFallback style={{ backgroundColor: getAvatarData(user.name).backgroundColor, color: 'white' }}>
                               {user.name[0]}
@@ -618,8 +617,8 @@ const ChatUI = () => {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Button 
-                                  variant="ghost" 
+                                <Button
+                                  variant="ghost"
                                   size="icon"
                                   onClick={() => handleToggleMute(user.id)}
                                 >
@@ -654,7 +653,7 @@ const ChatUI = () => {
       </div>
 
       {/* 添加 SharePoster 组件 */}
-      <SharePoster 
+      <SharePoster
         isOpen={showPoster}
         onClose={() => setShowPoster(false)}
         chatAreaRef={chatAreaRef}

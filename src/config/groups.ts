@@ -15,8 +15,8 @@ export const groups: Group[] = [
   },
   {
     id: 'group2',
-    name: '硅碳生命体交流群',
-    description: '硅碳生命体交流群',
-    members: ['ai4', 'ai5', 'ai6', 'ai7']
+    name: '前端开发交流群',
+    description: '前端开发交流群',
+    members: ['ai1', 'ai2', 'ai3', 'ai4']
   }
 ];
