@@ -43,7 +43,7 @@ export function generateAICharacters(groupName: string): AICharacter[] {
   return [
     {
       id: 'ai1',
-      name: "资深项目经理",
+      name: `资深项目经理-${modelConfigs[2].model}`,
       personality: "high_eq",
       model: modelConfigs[2].model,
       avatar: "",  // 如果有头像资源可以添加路径,
@@ -78,7 +78,7 @@ export function generateAICharacters(groupName: string): AICharacter[] {
     },
     {
       id: 'ai2',
-      name: "前端开发架构师",
+      name: `前端开发架构师-${modelConfigs[4].model}`,
       personality: "high_eq",
       model: modelConfigs[4].model,
       avatar: "",
@@ -118,7 +118,7 @@ export function generateAICharacters(groupName: string): AICharacter[] {
     },
     {
       id: 'ai3',
-      name: "前端组件拆分专家",
+      name: `前端组件拆分专家-${modelConfigs[1].model}`,
       personality: "high_eq",
       model: modelConfigs[1].model,
       avatar: "",
@@ -144,7 +144,7 @@ export function generateAICharacters(groupName: string): AICharacter[] {
     },
     {
       id: 'ai4',
-      name: "前端代码生成专家",
+      name: `前端代码生成专家-${modelConfigs[3].model}`,
       personality: "high_eq",
       model: modelConfigs[3].model,
       avatar: "",
