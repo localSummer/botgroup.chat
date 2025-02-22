@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import domtoimage from 'dom-to-image';
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ interface SharePosterProps {
 
 export function SharePoster({ isOpen, onClose, chatAreaRef }: SharePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
-  const [posterImage, setPosterImage] = React.useState<string>('');
+  const [posterImage, setPosterImage] = useState<string>('');
 
   useEffect(() => {
     if (isOpen && chatAreaRef.current) {
@@ -97,12 +97,12 @@ export function SharePoster({ isOpen, onClose, chatAreaRef }: SharePosterProps) 
 
   const handleDownload = async () => {
     if (!posterImage) return;
-    
+
     try {
       // 创建一个新的图片对象
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      
+
       // 等待图片加载完成
       await new Promise((resolve, reject) => {
         img.onload = resolve;
@@ -115,7 +115,7 @@ export function SharePoster({ isOpen, onClose, chatAreaRef }: SharePosterProps) 
       const canvas = document.createElement('canvas');
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) {
         throw new Error('无法创建canvas上下文');
@@ -125,7 +125,7 @@ export function SharePoster({ isOpen, onClose, chatAreaRef }: SharePosterProps) 
       ctx.imageSmoothingQuality = 'high';
       ctx.scale(scale, scale);
       ctx.drawImage(img, 0, 0);
-      
+
       // 转换为Blob
       const blob = await new Promise<Blob>((resolve) => {
         canvas.toBlob((blob) => {
@@ -173,10 +173,10 @@ export function SharePoster({ isOpen, onClose, chatAreaRef }: SharePosterProps) 
         <div className="flex-1 overflow-auto ">
           {posterImage && (
             <div className="flex items-center justify-center min-h-full">
-              <img 
-                src={posterImage} 
-                alt="Share Poster" 
-                className="w-full w-auto h-auto" 
+              <img
+                src={posterImage}
+                alt="Share Poster"
+                className="w-full w-auto h-auto"
                 style={{
                   objectFit: 'contain',
                   imageRendering: 'crisp-edges',
@@ -186,7 +186,7 @@ export function SharePoster({ isOpen, onClose, chatAreaRef }: SharePosterProps) 
             </div>
           )}
         </div>
-        
+
         <div className="flex items-center justify-center gap-2 p-2 sm:p-4 border-t">
           <Button onClick={handleDownload}>
             保存聊天海报

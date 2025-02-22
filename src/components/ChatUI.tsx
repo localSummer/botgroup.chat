@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Send, Menu, MoreHorizontal, UserPlus, UserMinus, Users2, Users, MoreVertical, Share2, Mic, MicOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +39,7 @@ const getAvatarData = (name: string) => {
 };
 
 // 单个完整头像
-const SingleAvatar = ({ user }: { user: User | AICharacter }) => {
+const SingleAvatar = ({ user }: { user: AICharacter }) => {
   // 如果有头像就使用头像，否则使用默认的文字头像
   if ('avatar' in user && user.avatar) {
     return (
@@ -60,7 +60,7 @@ const SingleAvatar = ({ user }: { user: User | AICharacter }) => {
 };
 
 // 左右分半头像
-const HalfAvatar = ({ user, isFirst }: { user: User, isFirst: boolean }) => {
+const HalfAvatar = ({ user, isFirst }: { user: AICharacter, isFirst: boolean }) => {
   if ('avatar' in user && user.avatar) {
     return (
       <div
@@ -88,7 +88,7 @@ const HalfAvatar = ({ user, isFirst }: { user: User, isFirst: boolean }) => {
 };
 
 // 四分之一头像
-const QuarterAvatar = ({ user, index }: { user: User, index: number }) => {
+const QuarterAvatar = ({ user, index }: { user: AICharacter, index: number }) => {
   if ('avatar' in user && user.avatar) {
     return (
       <div
@@ -150,7 +150,7 @@ const ChatUI = () => {
   const [users, setUsers] = useState([
     { id: 1, name: "我" },
     ...groupAiCharacters
-  ]);
+  ] as AICharacter[]);
   const [showMembers, setShowMembers] = useState(false);
   const [messages, setMessages] = useState([
 
@@ -169,9 +169,9 @@ const ChatUI = () => {
 
   const abortController = new AbortController();
 
-  const handleRemoveUser = (userId: number) => {
-    setUsers(users.filter(user => user.id !== userId));
-  };
+  // const handleRemoveUser = (userId: number) => {
+  //   setUsers(users.filter(user => user.id !== userId));
+  // };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
