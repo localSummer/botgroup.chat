@@ -38,8 +38,7 @@
      - 设置环境变量（必须）：
        ```
         DASHSCOPE_API_KEY=xxx //千问模型KEY
-        HUNYUAN_API_KEY=xxx //混元模型KEY
-        ARK_API_KEY=xxx //豆包模型KEY
+        GOOGLE_API_KEY=xxx //Google Gemeni
        ```
 
 4. 点击 "Save and Deploy"
