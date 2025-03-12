@@ -4,7 +4,7 @@ import { modelConfigs } from '../../src/config/aiCharacters';
 export async function onRequestPost({ env, request }) {
   try {
     const { message, custom_prompt, history, aiName, index, model = "qwen-plus" } = await request.json();
-    
+
     const modelConfig = modelConfigs.find(config => config.model === model);
 
     if (!modelConfig) {
@@ -25,14 +25,14 @@ export async function onRequestPost({ env, request }) {
     // 根据性格设置不同的系统提示语
     let systemPrompt = "";
 
-    systemPrompt = custom_prompt + "\n 注意重要：1、你在群里叫" + aiName + "认准自己的身份； 2、你的输出内容不要加" + aiName + "：这种多余前缀；3、如果用户提出玩游戏，比如成语接龙等，严格按照游戏规则，不要说一大堆，要简短精炼; 4、不要重复别人的话！"
+    systemPrompt = custom_prompt + "\n 注意重要：1、你在群里叫" + aiName + "认准自己的身份； 2、你的输出内容不要加" + aiName + "：这种多余前缀； 3、你的思考和输出内容注意遵循Workflow配置  4、不要重复别人的话！"
 
     // 构建完整的消息历史
     const baseMessages = [
       { role: "system", content: systemPrompt },
       ...history.slice(-10), // 添加历史消息
     ];
-    
+
     // 根据 index 插入新消息
     const userMessage = { role: "user", content: message };
     if (index === 0) {
@@ -48,6 +48,7 @@ export async function onRequestPost({ env, request }) {
       model: model,
       messages: messages,
       stream: true,
+      temperature: 0.7,
     });
 
     // 创建 ReadableStream
